@@ -1,27 +1,23 @@
-import { useState, useEffect, useRef } from 'react'
-import './App.css'
-import QRCode from 'qrcode'
+'use client';
 
-function App() {
+import { useState, useRef } from 'react';
+import QRCode from 'qrcode';
+
+interface FileUploaderProps {
+  serverInfo: {
+    ip: string;
+    port: string;
+  };
+}
+
+export default function FileUploader({ serverInfo }: FileUploaderProps) {
   const [file, setFile] = useState<File | null>(null);
   const [uploading, setUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
-  const [serverInfo, setServerInfo] = useState({ ip: '', port: '' });
   const [dragActive, setDragActive] = useState(false);
-  const [cleaning, setCleaning] = useState(false);
-  const [cleanupMessage, setCleanupMessage] = useState('');
   const [qrCodeDataURL, setQRCodeDataURL] = useState<string>('');
-  const fileInputRef = useRef<HTMLInputElement>(null);
-
-  useEffect(() => {
-    // Fetch server info
-    fetch('/api/server-info')
-      .then(response => response.json())
-      .then(data => setServerInfo(data))
-      .catch(error => console.error('Error fetching server info:', error));
-  }, []);
-
   const [selectedFileUrl, setSelectedFileUrl] = useState<string>('');
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
@@ -142,32 +138,8 @@ function App() {
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
   };
 
-  const handleCleanup = async () => {
-    setCleaning(true);
-    setCleanupMessage('');
-
-    try {
-      const response = await fetch('/api/cleanup', {
-        method: 'POST',
-      });
-
-      const data = await response.json();
-      setCleanupMessage(`Cleanup successful! Deleted ${data.deletedCount} files.`);
-    } catch (error) {
-      console.error('Error cleaning uploads directory:', error);
-      setCleanupMessage('Error cleaning uploads directory.');
-    } finally {
-      setCleaning(false);
-    }
-  };
-
   return (
-    <div className="app-container">
-      <header>
-        <h1>LANShare</h1>
-        <p className="subtitle">Upload and share files on your local network</p>
-      </header>
-
+    <>
       <div
         className={`upload-area ${dragActive ? 'drag-active' : ''}`}
         onDragEnter={handleDrag}
@@ -246,38 +218,6 @@ function App() {
           </button>
         </div>
       )}
-
-
-
-      {serverInfo.ip && (
-        <div className="server-info">
-          <h3>LAN Access</h3>
-          <p>
-            Other devices on your network can access this page at:
-            <a
-              href={`http://${serverInfo.ip}:${serverInfo.port}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="lan-link"
-            >
-              http://{serverInfo.ip}:{serverInfo.port}
-            </a>
-          </p>
-        </div>
-      )}
-
-      <div className="cleanup-container">
-        <button
-          className="cleanup-button"
-          onClick={handleCleanup}
-          disabled={cleaning}
-        >
-          {cleaning ? 'Cleaning...' : 'Clean Uploads Directory'}
-        </button>
-        {cleanupMessage && <p className="cleanup-message">{cleanupMessage}</p>}
-      </div>
-    </div>
-  )
+    </>
+  );
 }
-
-export default App

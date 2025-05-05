@@ -1,0 +1,29 @@
+{
+  "name": "next-lanshare",
+  "version": "1.0.0",
+  "description": "LANShare application built with Next.js",
+  "scripts": {
+    "dev": "next dev -p 3001",
+    "build": "next build",
+    "start": "next start -p 3001",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "next": "^14.0.4",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "qrcode": "^1.5.4",
+    "ip": "^2.0.1",
+    "formidable": "^3.5.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.5",
+    "@types/react": "^18.2.45",
+    "@types/react-dom": "^18.2.18",
+    "@types/qrcode": "^1.5.5",
+    "@types/formidable": "^3.4.5",
+    "typescript": "^5.3.3",
+    "eslint": "^8.56.0",
+    "eslint-config-next": "^14.0.4"
+  }
+}

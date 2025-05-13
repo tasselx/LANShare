@@ -2,6 +2,8 @@
 
 LANShare 是一个简单易用的局域网文件共享应用。它允许您在同一网络上的设备之间快速共享文件，无需外部服务或复杂设置。
 
+![LANShare 截图](screenshots/lanshare_main.png)
+
 ## 功能特点
 
 - **即时文件共享**：上传文件后立即获取可共享链接
@@ -94,10 +96,10 @@ LANShare 是一个简单易用的局域网文件共享应用。它允许您在�
 
 ## 使用的技术
 
-- **后端**：Node.js 与 Koa.js
+- **后端**：Node.js 与 Express.js
 - **前端**：React 与 TypeScript 和 Vite
 - **文件处理**：express-fileupload
-- **二维码生成**：qrcode
+- **二维码生成**：react-qr-code
 
 ## 许可证
 

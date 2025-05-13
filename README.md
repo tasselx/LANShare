@@ -2,6 +2,8 @@
 
 LANShare is a simple, easy-to-use file sharing application for your local network. It allows you to quickly share files between devices on the same network without the need for external services or complicated setup.
 
+![LANShare Screenshot](screenshots/lanshare_main.png)
+
 ## Features
 
 - **Instant File Sharing**: Upload files and immediately get a shareable link
@@ -85,8 +87,9 @@ Once started, the application will be available at:
 
 1. Drag and drop a file onto the upload area, or click to select a file
 2. The file will be automatically uploaded and a shareable link will be generated
-3. Share the link or QR code with anyone on your local network
-4. They can access the file by opening the link in their browser
+3. Once uploaded, you'll get a shareable link and QR code
+4. Share the link or QR code with anyone on your local network
+5. They can access the file by opening the link in their browser or scanning the QR code
 
 ### Cleaning Up
 
@@ -94,10 +97,10 @@ Click the "Clean Uploads Directory" button at the bottom of the page to remove a
 
 ## Technologies Used
 
-- **Backend**: Node.js with Koa.js
+- **Backend**: Node.js with Express.js
 - **Frontend**: React with TypeScript and Vite
 - **File Handling**: express-fileupload
-- **QR Code Generation**: qrcode
+- **QR Code Generation**: react-qr-code
 
 ## License
 

@@ -14,8 +14,22 @@ const PORT = process.env.PORT || 3001;
 
 // Create uploads directory if it doesn't exist
 const uploadsDir = path.join(__dirname, 'uploads');
-if (!fs.existsSync(uploadsDir)) {
-  fs.mkdirSync(uploadsDir, { recursive: true });
+console.log('Uploads directory path:', uploadsDir);
+
+try {
+  if (!fs.existsSync(uploadsDir)) {
+    console.log('Creating uploads directory...');
+    fs.mkdirSync(uploadsDir, { recursive: true });
+    console.log('Uploads directory created successfully');
+  } else {
+    console.log('Uploads directory already exists');
+  }
+
+  // Check if directory is writable
+  fs.accessSync(uploadsDir, fs.constants.W_OK);
+  console.log('Uploads directory is writable');
+} catch (error) {
+  console.error('Error setting up uploads directory:', error);
 }
 
 // Helper function to safely read filenames with special characters
@@ -72,35 +86,52 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // API endpoint to upload a file
 app.post('/api/upload', async (req, res) => {
+  console.log('Received upload request');
   try {
+    console.log('Request files:', req.files ? 'Files present' : 'No files');
+
     if (!req.files || Object.keys(req.files).length === 0) {
+      console.log('No files were uploaded');
       return res.status(400).json({ message: 'No files were uploaded' });
     }
 
     const file = req.files.file;
+    console.log('File details:', {
+      name: file.name,
+      size: file.size,
+      mimetype: file.mimetype
+    });
+
     const filePath = path.join(uploadsDir, file.name);
+    console.log('File will be saved to:', filePath);
 
     // Move the file to the uploads directory
     await file.mv(filePath);
+    console.log('File moved successfully');
 
     // Generate download URL
     const localIP = ip.address();
+    console.log('Local IP address:', localIP);
 
     // Properly encode the filename for URL usage
     const encodedFileName = encodeURIComponent(file.name);
     const downloadUrl = `http://${localIP}:${PORT}/uploads/${encodedFileName}`;
+    console.log('Generated download URL:', downloadUrl);
 
     // Log for debugging
     console.log('Uploaded file name:', file.name);
     console.log('Encoded file name:', encodedFileName);
 
-    return res.status(200).json({
+    const responseData = {
       message: 'File uploaded successfully',
       fileName: file.name,
       fileSize: file.size,
       downloadUrl,
       encodedFileName
-    });
+    };
+
+    console.log('Sending response:', responseData);
+    return res.status(200).json(responseData);
   } catch (error) {
     console.error('Error uploading file:', error);
     return res.status(500).json({ message: 'Server error', error: error.message });
